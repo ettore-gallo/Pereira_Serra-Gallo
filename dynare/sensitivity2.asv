@@ -18,7 +18,7 @@ baseline_params = struct( ...
 
 %% === 2. Sensitivity grids (define only for params you want to test) ===
 sensitivity_grids = struct( ...
-    'taur', [0.14 0.2 0.26], ... %    'taur', [0.7 1.0 1.3] * baseline_params.taur, ...
+    'taur', [0.2 0.2 0.4], ... %    'taur', [0.7 1.0 1.3] * baseline_params.taur, ...
     'tauw', [0.7 1.0 1.3] * baseline_params.tauw, ...
     'xi', [0.7 1.0 1.3] * baseline_params.xi, ...
     'phiiOM', [0.7 1.0 1.3] * baseline_params.phiiOM, ...
@@ -163,3 +163,79 @@ for p = 1:length(param_names)
         print(fig, ['IRFs_' current_shock '_' pname], '-dpdf', '-r300');
     end
 end
+%% === 7. Global Sensitivity: Sobol Indices (Variance-based) ===
+% Extended to additional parameters: phiphipiw, phiid, phiir, phiivarphi, phiiy
+
+% 1. Add extra parameters to baseline and sensitivity grids if not present
+extra_params = {'phiphipiw','phiid','phiir','phiivarphi','phiiy', ''};
+extra_defaults = [0.1, 0.01, 0.2, 0.2, 0.2];
+for idx = 1:numel(extra_params)
+    pname = extra_params{idx};
+    if ~isfield(baseline_params, pname)
+        baseline_params.(pname) = extra_defaults(idx);
+        sensitivity_grids.(pname) = [0.7 1.0 1.3] * extra_defaults(idx);
+    end
+end
+
+% 2. Define Sobol parameter set (all param_names plus new ones)
+sobol_params = [param_names; extra_params'];
+lb = zeros(length(sobol_params),1);
+ub = zeros(length(sobol_params),1);
+for i = 1:length(sobol_params)
+    grid = sensitivity_grids.(sobol_params{i});
+    lb(i) = min(grid);
+    ub(i) = max(grid);
+end
+
+% 3. Generate Sobol sample matrix
+N = 1000; % number of sample points
+sobol_samples = lhsdesign(N, length(sobol_params));
+for i = 1:length(sobol_params)
+    sobol_samples(:,i) = lb(i) + sobol_samples(:,i).*(ub(i)-lb(i));
+end
+
+% 4. Run model for each sample, collect output for several variables
+metric_names = {'devlnYe_eom'}; %,'devlnYn_eom','devlnCr_eom','devlnCw_eom','devlnIn_eom'};
+output_metrics = nan(N, numel(metric_names));
+for n = 1:N
+    params = baseline_params;
+    for i = 1:length(sobol_params)
+        params.(sobol_params{i}) = sobol_samples(n,i);
+    end
+    param_fields = fieldnames(params);
+    for k = 1:length(param_fields)
+        set_param_value(param_fields{k}, params.(param_fields{k}));
+    end
+    [info, oo_] = stoch_simul(M_, options_, oo_, var_list_);
+    if info
+        continue;
+    end
+    irf = oo_.irfs;
+    for m = 1:numel(metric_names)
+        if isfield(irf, metric_names{m})
+            output_metrics(n,m) = max(abs(irf.(metric_names{m})));
+        end
+    end
+end
+
+% 5. Compute Sobol indices (correlation proxy) for all metrics
+Si_all = nan(length(sobol_params), numel(metric_names));
+for m = 1:numel(metric_names)
+    for i = 1:length(sobol_params)
+        Si_all(i,m) = abs(corr(sobol_samples(:,i), output_metrics(:,m), 'rows','complete'));
+    end
+end
+
+% 6. Plot sensitivity bar charts for each output metric
+for m = 1:numel(metric_names)
+    figure('Name', ['Global Sensitivity: ' metric_names{m}]);
+    bar(Si_all(:,m), 'FaceColor', [0.2 0.6 0.8]);
+    set(gca, 'XTickLabel', sobol_params, 'XTickLabelRotation', 45, 'FontSize', 12);
+    ylabel('Sensitivity Index (|Corr|)');
+    title(['Global Sensitivity of $\max|\mathrm{' strrep(metric_names{m},'_','\,') '}|$'], 'Interpreter','latex');
+    grid on;
+    print(gcf, ['GlobalSensitivity_' metric_names{m}], '-dpdf', '-r300');
+end
+
+%% === 8. Heatmap: Parameter Interaction Effects (Extended) ===
+% Example: show how devlnYe peak responds to
