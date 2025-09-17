@@ -260,7 +260,7 @@ for m = 1:numel(metric_names)
     set(gca, 'XTickLabel', greek_labels, 'XTickLabelRotation', 45, 'FontSize', 12);
     set(gca, 'TickLabelInterpreter', 'latex');
     ylabel('Sensitivity Index (|Corr|)');
-    title(['Global Sensitivity of $\max|\mathrm{' strrep(metric_names{m},'_','\,') '}|$'], 'Interpreter','latex');
+    title(['Global Sensitivity of $\max|\mathrm{' strrep(metric_names{m},'_','\,') '}|$ (random negative shock to $\alpha$)'], 'Interpreter','latex');
     grid on;
     print(gcf, ['GlobalSensitivity_' metric_names{m}], '-dpdf', '-r300');
 end
