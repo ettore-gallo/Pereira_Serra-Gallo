@@ -1,0 +1,228 @@
+Starting Dynare (version 6.2).
+Calling Dynare with arguments: noclearall
+Starting preprocessing of the model file ...
+Found 46 equation(s).
+Evaluating expressions...
+Computing static model derivatives (order 1).
+Normalizing the static model...
+Finding the optimal block decomposition of the static model...
+13 block(s) found:
+  12 recursive block(s) and 1 simultaneous block(s).
+  the largest simultaneous block has 22 equation(s)
+                                 and 22 feedback variable(s).
+Computing dynamic model derivatives (order 1).
+Normalizing the dynamic model...
+Finding the optimal block decomposition of the dynamic model...
+3 block(s) found:
+  2 recursive block(s) and 1 simultaneous block(s).
+  the largest simultaneous block has 16 equation(s)
+                                 and 2 feedback variable(s).
+Preprocessing completed.
+Preprocessing time: 0h00m00s.
+[Warning: Some of the parameters have no value (epsilon, Knbar, Lbar, Crbar, Cwbar, varphibar, sp, wpbar, nue, nuK, nuL, Dbar, Debar, Dnbar, Kebar, Mrbar, Gbar, Zebar, Znbar, Bbar, nune) when using
+steady. If these parameters are not initialized in a steadystate file or a steady_state_model-block, Dynare may not be able to solve the model. Note that simul, perfect_foresight_setup, and
+perfect_foresight_solver do not automatically call the steady state file.] 
+
+STEADY-STATE RESULTS:
+
+Yn       		 1
+Ye       		 0.15
+Cw       		 0.514808
+Cr       		 0.10649
+L        		 0.342406
+Ie       		 0.05
+In       		 0.2
+Mr       		 2.73703
+B        		 0.0199952
+Ze       		 0.0989696
+Zn       		 0.00236847
+rm       		 0.006485
+Pip      		 1.0056
+wp       		 1.87938
+rd       		 0.0138779
+Kn       		 9.89637
+Ke       		 2.47409
+e        		 38.5366
+G        		 0.128702
+varphi   		 0.64351
+Piw      		 1.0056
+nu       		 0.527118
+De       		 0.547407
+Dn       		 2.18963
+D        		 2.73703
+om_diff  		 0
+alpha    		 0.9
+Vin      		 1
+Vr       		 1
+Vom      		 1
+Vnu      		 1
+Vtw      		 1
+Vtr      		 1
+un       		 0.8
+devlnYe  		 0
+devlnYn  		 0
+devlnCr  		 0
+devlnCw  		 0
+devlnIe  		 0
+devlnIn  		 0
+devR     		 0
+devPip   		 0
+devwp    		 0
+devlnL   		 0
+devOmega 		 0
+devlnG   		 0
+
+EIGENVALUES:
+         Modulus             Real        Imaginary
+               0               -0                0
+       2.252e-18        2.252e-18                0
+       1.665e-16        1.665e-16                0
+       0.0008454        0.0008454                0
+          0.1951           0.1951                0
+             0.5              0.5                0
+             0.5              0.5                0
+             0.5              0.5                0
+             0.5              0.5                0
+             0.5              0.5                0
+             0.5              0.5                0
+           0.891            0.891                0
+          0.9798           0.9798                0
+          0.9798           0.9798                0
+          0.9881           0.9881                0
+          0.9882           0.9882                0
+          0.9882           0.9882                0
+
+There are 0 eigenvalue(s) larger than 1 in modulus for 0 forward-looking variable(s)
+The rank condition is verified.
+
+MODEL_DIAGNOSTICS:  No obvious problems with this mod-file were detected.
+
+MODEL SUMMARY
+
+  Number of variables:         46
+  Number of stochastic shocks: 6
+  Number of state variables:   17
+  Number of jumpers:           0
+  Number of static variables:  29
+
+
+MATRIX OF COVARIANCE OF EXOGENOUS SHOCKS
+Variables         ein        er       etw       etr       enu       eom
+ein          0.000100  0.000000  0.000000  0.000000  0.000000  0.000000
+er           0.000000  0.000100  0.000000  0.000000  0.000000  0.000000
+etw          0.000000  0.000000  0.000100  0.000000  0.000000  0.000000
+etr          0.000000  0.000000  0.000000  0.000100  0.000000  0.000000
+enu          0.000000  0.000000  0.000000  0.000000  0.000100  0.000000
+eom          0.000000  0.000000  0.000000  0.000000  0.000000  0.000100
+
+POLICY AND TRANSITION FUNCTIONS
+                             devlnYe         devlnYn         devlnCr         devlnCw         devlnIe         devlnIn            devR          devPip          devlnL           devwp        devOmega          devlnG
+Yn(-1)                     19.505473       19.505473       19.496556       19.510413       19.496556       19.496556        0.016292        0.049675       19.505473        0.009284               0       19.510413
+wp(-1)                     -0.061194       -0.061194       -0.142365       -0.016227       -0.142365       -0.142365        0.004325        0.452191       -0.061194        0.084510               0       -0.016227
+Dn(-1)                     -0.445406       -0.445406       -0.445203       -0.445519       -0.445203       -0.445203       -0.000372       -0.001134       -0.445406       -0.000212               0       -0.445519
+om_diff(-1)               -48.763682      -48.763682      -48.741389      -48.776031      -48.741389      -48.741389       -0.040730       -0.124189      -48.763682       -0.023210               0      -48.776031
+alpha(-1)                          0               0               0               0               0               0               0               0               0               0      -95.553240               0
+Vin(-1)                    98.763682       48.763682       48.741389       48.776031       48.741389       48.741389        0.040730        0.124189       48.763682        0.023210               0       48.776031
+Vr(-1)                     -9.752736       -9.752736       -9.748278       -9.755206       -9.748278       -9.748278        0.316104       -0.024838       -9.752736       -0.004642               0       -9.755206
+Vom(-1)                            0               0               0               0               0               0               0               0               0               0      -48.257124               0
+Vnu(-1)                    -0.034453       -0.034453       -0.080153       -0.009136       -0.080153       -0.080153        0.002435        0.254587       -0.034453        0.047580               0       -0.009136
+Vtw(-1)                            0               0               0      -12.500000               0               0               0               0               0               0               0       50.000000
+ein                       197.527363       97.527363       97.482778       97.552063       97.482778       97.482778        0.081461        0.248377       97.527363        0.046419               0       97.552063
+er                        -19.505473      -19.505473      -19.496556      -19.510413      -19.496556      -19.496556        0.632208       -0.049675      -19.505473       -0.009284               0      -19.510413
+etw                                0               0               0      -25.000000               0               0               0               0               0               0               0      100.000000
+enu                        -0.068905       -0.068905       -0.160305       -0.018271       -0.160305       -0.160305        0.004870        0.509173       -0.068905        0.095160               0       -0.018271
+eom                                0               0               0               0               0               0               0               0               0               0       96.514248               0
+
+
+THEORETICAL MOMENTS
+VARIABLE         MEAN  STD. DEV.   VARIANCE
+devlnYe        0.0000     3.3962    11.5344
+devlnYn        0.0000     2.7055     7.3196
+devlnCr        0.0000     2.7042     7.3129
+devlnCw        0.0000     2.7215     7.4066
+devlnIe        0.0000     2.7042     7.3129
+devlnIn        0.0000     2.7042     7.3129
+devR           0.0000     0.0076     0.0001
+devPip         0.0000     0.0091     0.0001
+devlnL         0.0000     2.7055     7.3196
+devwp          0.0000     0.0017     0.0000
+devOmega       0.0000     3.9641    15.7140
+devlnG         0.0000     2.9422     8.6566
+
+
+
+VARIANCE DECOMPOSITION (in percent)
+               ein      er     etw     etr     enu     eom
+devlnYe      50.44    0.56    0.00    0.00    0.00   49.01
+devlnYn      21.90    0.88    0.00    0.00    0.00   77.23
+devlnCr      21.90    0.88    0.00    0.00    0.00   77.23
+devlnCw      21.65    0.87    1.13    0.00    0.00   76.36
+devlnIe      21.90    0.88    0.00    0.00    0.00   77.23
+devlnIn      21.90    0.88    0.00    0.00    0.00   77.23
+devR          1.93   91.28    0.00    0.00    0.01    6.79
+devPip       12.67    0.51    0.00    0.00   42.12   44.71
+devlnL       21.90    0.88    0.00    0.00    0.00   77.23
+devwp        12.67    0.51    0.00    0.00   42.12   44.71
+devOmega      0.00    0.00    0.00    0.00    0.00  100.00
+devlnG       18.53    0.74   15.40    0.00    0.00   65.33
+
+
+
+MATRIX OF CORRELATIONS
+Variables     devlnYe   devlnYn   devlnCr   devlnCw   devlnIe   devlnIn      devR    devPip    devlnL     devwp  devOmega    devlnG
+devlnYe        1.0000    0.9534    0.9534    0.9480    0.9534    0.9534    0.2105    0.7252    0.9534    0.7252   -0.6677    0.8769
+devlnYn        0.9534    1.0000    1.0000    0.9944    1.0000    1.0000    0.2059    0.7606    1.0000    0.7606   -0.8381    0.9198
+devlnCr        0.9534    1.0000    1.0000    0.9944    1.0000    1.0000    0.2059    0.7604    1.0000    0.7604   -0.8381    0.9198
+devlnCw        0.9480    0.9944    0.9944    1.0000    0.9944    0.9944    0.2048    0.7565    0.9944    0.7565   -0.8334    0.8730
+devlnIe        0.9534    1.0000    1.0000    0.9944    1.0000    1.0000    0.2059    0.7604    1.0000    0.7604   -0.8381    0.9198
+devlnIn        0.9534    1.0000    1.0000    0.9944    1.0000    1.0000    0.2059    0.7604    1.0000    0.7604   -0.8381    0.9198
+devR           0.2105    0.2059    0.2059    0.2048    0.2059    0.2059    1.0000    0.1615    0.2059    0.1615   -0.2486    0.1894
+devPip         0.7252    0.7606    0.7604    0.7565    0.7604    0.7604    0.1615    1.0000    0.7606    1.0000   -0.6377    0.6997
+devlnL         0.9534    1.0000    1.0000    0.9944    1.0000    1.0000    0.2059    0.7606    1.0000    0.7606   -0.8381    0.9198
+devwp          0.7252    0.7606    0.7604    0.7565    0.7604    0.7604    0.1615    1.0000    0.7606    1.0000   -0.6377    0.6997
+devOmega      -0.6677   -0.8381   -0.8381   -0.8334   -0.8381   -0.8381   -0.2486   -0.6377   -0.8381   -0.6377    1.0000   -0.7709
+devlnG         0.8769    0.9198    0.9198    0.8730    0.9198    0.9198    0.1894    0.6997    0.9198    0.6997   -0.7709    1.0000
+
+
+
+COEFFICIENTS OF AUTOCORRELATION
+Order            1       2       3       4       5
+devlnYe     0.7676  0.5971  0.4837  0.4057  0.3487
+devlnYn     0.8930  0.7770  0.6791  0.5977  0.5286
+devlnCr     0.8930  0.7770  0.6791  0.5977  0.5286
+devlnCw     0.8886  0.7711  0.6729  0.5917  0.5230
+devlnIe     0.8930  0.7770  0.6791  0.5977  0.5286
+devlnIn     0.8930  0.7770  0.6791  0.5977  0.5286
+devR        0.5306  0.2936  0.1722  0.1088  0.0746
+devPip      0.7278  0.5553  0.4459  0.3724  0.3192
+devlnL      0.8930  0.7770  0.6791  0.5977  0.5286
+devwp       0.7278  0.5553  0.4459  0.3724  0.3192
+devOmega    0.9623  0.8931  0.8136  0.7339  0.6583
+devlnG      0.8325  0.6959  0.5938  0.5153  0.4520
+stoch_simul:: The IRF of devOmega to ein is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devOmega to er is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnYe to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnYn to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnCr to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnIe to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnIn to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devR to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devPip to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnL to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devwp to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devOmega to etw is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnYe to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnYn to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnCr to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnCw to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnIe to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnIn to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devR to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devPip to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnL to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devwp to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devOmega to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devlnG to etr is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+stoch_simul:: The IRF of devOmega to enu is smaller than the irf_plot_threshold of 0.000 and will not be displayed.
+Total computing time : 0h00m00s
+Note: warning(s) encountered in MATLAB/Octave code

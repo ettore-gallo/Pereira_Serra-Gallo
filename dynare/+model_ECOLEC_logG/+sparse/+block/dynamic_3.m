@@ -1,0 +1,26 @@
+function [y, T] = dynamic_3(y, x, params, steady_state, sparse_rowval, sparse_colval, sparse_colptr, T)
+  y(65)=params(31)*y(79)*(y(8)*y(12)/(y(59)*params(1))+y(56)+y(57)+y(55))+y(51)*params(30)*y(78)*y(60);
+  y(87)=100*(y(58)-params(13));
+  y(49)=(1-params(30)*y(78))*y(60)*y(51);
+  y(73)=y(27)*(1+log(1+y(65))*(params(38)-y(27)))*y(76);
+  y(86)=100*log(y(53)/params(48));
+  y(85)=100*log(y(52)/params(47));
+  y(92)=100*log(y(65)/params(53));
+  y(84)=100*log(y(49)/params(12));
+  y(89)=100*(y(60)-params(29));
+  T(15)=(y(47)*(1+params(58))/params(58))^params(36);
+  y(72)=(params(38)-y(73))*T(15);
+  y(88)=100*(y(59)-params(4));
+  y(70)=y(24)/(y(59)*params(1))+params(27)*y(53);
+  y(90)=100*log(y(51)/params(10));
+  y(91)=100*log(1+y(72));
+  y(83)=100*log(y(50)/params(11));
+  y(82)=100*log(y(47)/params(7));
+  y(81)=log(y(48)/params(8))*100;
+  y(69)=y(23)/(y(59)*params(1))+params(27)*y(52);
+  y(63)=y(52)+(1-params(3))/params(1)*y(17);
+  y(54)=y(8)/(y(59)*params(1))+params(28)*(1-params(31)*y(79))*(y(47)-y(60)*y(51)-(1-params(27))*(y(53)+y(52)));
+  y(71)=y(69)+y(70);
+  y(62)=y(53)+(1-params(3))/params(1)*y(16);
+  y(80)=y(47)/(params(34)*y(16));
+end

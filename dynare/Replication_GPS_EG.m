@@ -1,5 +1,14 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% -- REPLICATION CODE FOR 
+%%%% "Climate change mitigation and green energy investment: a stock-flow consistent model" 
+%%%% Gustavo Pereira Serra and Ettore Gallo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 clear
 close all 
+
+% Adjust as needed
+addpath /Applications/Dynare/6.2-arm64/matlab
 cd '/Users/ettoreg/Documents/GitHub/Pereira_Serra-Gallo/dynare'
 
 %% === PARAMETER GREEK NOTATION MAPPING ===
@@ -332,3 +341,214 @@ end
 fprintf('\n=== Analysis Complete ===\n');
 fprintf('All plots now use Greek notation as specified in the parameter table.\n');
 fprintf('Files saved with appropriate Greek notation in legends and axis labels.\n');
+
+
+%% -- APPENDIX D.2 IRFs comparison with different specifications of the response to government spending ---
+
+
+%% compare_two_models_irfs.m
+% Run two Dynare models and compare IRFs after an 'eom' shock
+
+clear; close all;
+cd '/Users/ettoreg/Documents/GitHub/Pereira_Serra-Gallo/dynare'
+
+%% --- Baseline parameters (same as your file) ---
+baseline_params = struct( ...
+    'taur', 0.2, ...
+    'tauw', 0.2, ...
+    'xi', 0.129531, ...
+    'phiiOM', -0.5, ...
+    'psiOM', 0.5, ...
+    'phinuL', 0.5, ...
+    'varphia', 0.5, ...
+    'phirpi', 1.5, ...
+    'phiry', 0.125, ...
+    'Yebar', 0.15 ...
+);
+
+% Extra parameters you might have in other model
+extra_params = {'phiphipiw','phiid','phiir','phiivarphi','phiiy'};
+extra_defaults = [0.1, 0.01, 0.2, 0.2, 0.2];
+for idx = 1:numel(extra_params)
+    pname = extra_params{idx};
+    if ~isfield(baseline_params, pname)
+        baseline_params.(pname) = extra_defaults(idx);
+    end
+end
+
+%% --- Which models to run ---
+modelA = 'model_ECOLEC';           % baseline (you mentioned this)
+modelB = 'model_ECOLEC_logG';     % log-G variant
+
+tmpA = 'dynare_out_A.mat';
+tmpB = 'dynare_out_B.mat';
+
+%% --- Utility to apply baseline params into Dynare (uses set_param_value) ---
+function apply_params_to_dynare(params)
+    fn = fieldnames(params);
+    for k = 1:numel(fn)
+        try
+            set_param_value(fn{k}, params.(fn{k}));
+        catch ME
+            warning('Could not set parameter %s: %s', fn{k}, ME.message);
+        end
+    end
+end
+
+%% --- 1) Run model A (save output) ---
+fprintf('Running %s ...\n', modelA);
+try
+    % run dynare fresh for model A
+    dynare(modelA,'noclearall');    % creates M_,oo_,options_,var_list_
+    % apply baseline parameters (if model loads before parameters)
+    apply_params_to_dynare(baseline_params);
+    % re-run stoch_simul to ensure IRFs with baseline_params
+    [info, oo_] = stoch_simul(M_, options_, oo_, var_list_);
+    if info
+        warning('stoch_simul returned nonzero info for %s', modelA);
+    end
+    % save output
+    save(tmpA, 'M_', 'oo_', 'options_', 'var_list_');
+catch ME
+    error('Error running %s: %s', modelA, ME.message);
+end
+
+%% --- 2) Run model B (save output) ---
+fprintf('Running %s ...\n', modelB);
+try
+    dynare(modelB,'noclearall');
+    apply_params_to_dynare(baseline_params);
+    [info, oo_] = stoch_simul(M_, options_, oo_, var_list_);
+    if info
+        warning('stoch_simul returned nonzero info for %s', modelB);
+    end
+    save(tmpB, 'M_', 'oo_', 'options_', 'var_list_');
+catch ME
+    error('Error running %s: %s', modelB, ME.message);
+end
+
+%% --- 3) Load both outputs into workspace variables and remove tmp files optionally ---
+A = load(tmpA);
+B = load(tmpB);
+oo_A = A.oo_; M_A = A.M_;    %#ok<NASGU>
+oo_B = B.oo_; M_B = B.M_;    %#ok<NASGU>
+
+% optionally delete tmp files:
+% delete(tmpA); delete(tmpB);
+
+%% --- 4) Variables to compare and titles (same as yours) ---
+variables = {
+    'devlnYe'
+    'devlnYn'
+    'devlnCr'
+    'devlnCw'
+    'devlnIn'
+    'devR'
+    'devPip'
+    'devlnL'
+    'devwp'
+    'devOmega'
+};
+
+titles = {
+    '$\mathrm{dev}\,\ln(Y_{e,t})$'
+    '$\mathrm{dev}\,\ln(Y_{n,t})$'
+    '$\mathrm{dev}\,\ln(C_{r,t})$'
+    '$\mathrm{dev}\,\ln(C_{w,t})$'
+    '$\mathrm{dev}\,\ln(I_{n,t})$'
+    '$\mathrm{dev}\,R_{t}$'
+    '$\mathrm{dev}\,\Pi_{t}$'
+    '$\mathrm{dev}\,\ln(L_{t})$'
+    '$\mathrm{dev}\,\omega_{t}$'
+    '$\mathrm{dev}\,\ln(\Omega_{t})$'
+};
+
+shock = 'eom';
+horizon = 50;  % plot horizon
+
+%% --- 5) tratio computation function (keeps your formula) ---
+Ynbar = 1;
+Yebar = baseline_params.Yebar;
+compute_tratio_from_irf = @(irf) ...
+    (exp(irf.devOmega_eom/100)-1) ./ ...
+    (exp(irf.devlnYe_eom/100)*Yebar + exp(irf.devlnYn_eom/100)*Ynbar);
+
+%% --- 6) Plot overlays: Model A vs Model B ---
+fig = figure('Units','centimeters','Position',[1 1 21 29.7], ...
+             'PaperUnits','centimeters','PaperSize',[21 29.7], ...
+             'Name',['Comparison: ' modelA ' vs ' modelB ' - shock ' shock]);
+
+nvars = length(variables);
+nrows = 4; ncols = 3;    % subplot layout
+
+for v = 1:nvars
+    subplot(nrows,ncols,v);
+    varname = variables{v};
+    irf_field = [varname '_' shock];
+    
+    hold on;
+    % model A (linear)
+    if isfield(oo_A.irfs, irf_field)
+        vecA = oo_A.irfs.(irf_field);
+        plot(1:min(horizon,length(vecA)), vecA(1:min(horizon,length(vecA))), ...
+            'Color', [0 0.4470 0.7410], 'LineWidth', 1.8);  % blue
+    else
+        warning('Field %s not found in model A IRFs', irf_field);
+    end
+    % model B (nonlinear)
+    if isfield(oo_B.irfs, irf_field)
+        vecB = oo_B.irfs.(irf_field);
+        plot(1:min(horizon,length(vecB)), vecB(1:min(horizon,length(vecB))), ...
+            '--', 'Color', [0.8500 0.3250 0.0980], 'LineWidth', 1.8); % orange dashed
+    else
+        warning('Field %s not found in model B IRFs', irf_field);
+    end
+    
+    yline(0, 'k--', 'LineWidth', 1.0);
+    title(titles{v}, 'FontSize', 10, 'Interpreter','latex');
+    set(gca, 'FontSize', 8, 'Box', 'off');
+    xlim([1 horizon]);
+    
+    % Only place legend in the 10th subplot (bottom right)
+    % Create legend in empty bottom-right subplot (12)
+subplot(nrows, ncols, 12);
+h1 = plot(NaN, NaN, 'Color', [0 0.4470 0.7410], 'LineWidth', 1.8);
+hold on;
+h2 = plot(NaN, NaN, '--', 'Color', [0.8500 0.3250 0.0980], 'LineWidth', 1.8);
+leg = legend([h1 h2], {'Linear effect', 'Nonlinear effect'}, ...
+    'Interpreter', 'latex', 'FontSize', 9, 'Location', 'southeast');
+axis off;
+
+end
+
+% --- tratio in last subplot (11th) ---
+subplot(nrows,ncols,nvars+1);
+hold on;
+if isfield(oo_A.irfs, 'devOmega_eom') && isfield(oo_A.irfs, 'devlnYe_eom') && isfield(oo_A.irfs, 'devlnYn_eom')
+    try
+        trA = compute_tratio_from_irf(oo_A.irfs);
+        plot(1:min(horizon,length(trA)), trA(1:min(horizon,length(trA))), ...
+            'Color', [0 0.4470 0.7410], 'LineWidth', 1.8);
+    catch
+        warning('Could not compute tratio for model A');
+    end
+end
+if isfield(oo_B.irfs, 'devOmega_eom') && isfield(oo_B.irfs, 'devlnYe_eom') && isfield(oo_B.irfs, 'devlnYn_eom')
+    try
+        trB = compute_tratio_from_irf(oo_B.irfs);
+        plot(1:min(horizon,length(trB)), trB(1:min(horizon,length(trB))), ...
+            '--', 'Color', [0.8500 0.3250 0.0980], 'LineWidth', 1.8);
+    catch
+        warning('Could not compute tratio for model B');
+    end
+end
+yline(0, 'k--', 'LineWidth', 1.0);
+title('Carbon intensity ($\dot{\Omega}/Y$)', 'FontSize', 10, 'Interpreter','latex');
+set(gca, 'FontSize', 8, 'Box', 'off');
+xlim([1 horizon]);
+
+
+
+% Save figure
+print(gcf, sprintf('IRF_comparison', modelA, modelB, shock), '-dpdf', '-r300');
+fprintf('Comparison plot saved as PDF.\n');
